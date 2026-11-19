@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isMgr() { return request.auth != null && request.auth.token.email == 'manager@almajed-oud.app'; }
+    match /entries/{code} {
+      allow read, write: if request.auth != null &&
+        (isMgr() || request.auth.token.email == code + '@almajed-oud.app');
+    }
+  }
+}
